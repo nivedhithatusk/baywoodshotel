@@ -4,6 +4,13 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Menu, X, Facebook, Instagram, Twitter, MapPin, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 }
+};
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -30,15 +37,15 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out border-b border-transparent",
-        isScrolled || location !== "/" 
+        isScrolled 
           ? "bg-background/95 backdrop-blur-md border-border/40 py-4 shadow-sm" 
-          : "bg-transparent py-6 text-white"
+          : "bg-transparent text-white lg:py-4"
       )}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <Link href="/">
-          <a className="text-2xl md:text-3xl font-serif font-bold tracking-tight hover:opacity-80 transition-opacity">
-            {HOTEL_INFO.name}
+          <a className="text-2xl md:text-3xl font-serif font-bold tracking-tight">
+            <img src={HOTEL_INFO.logo} alt={HOTEL_INFO.name} className="h-20 w-max-50" />
           </a>
         </Link>
 
@@ -75,7 +82,7 @@ export function Navbar() {
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden p-2"
+          className="md:hidden p-2 text-black"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X /> : <Menu />}
@@ -84,7 +91,7 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 flex flex-col space-y-4 animate-in slide-in-from-top-5">
+        <div className="text-black md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 flex flex-col space-y-4 animate-in slide-in-from-top-5">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href}>
               <a 
@@ -114,7 +121,7 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <h3 className="text-3xl font-serif font-bold text-primary">{HOTEL_INFO.name}</h3>
-            <p className="text-muted-foreground leading-relaxed max-w-xs">
+            <p className="leading-relaxed max-w-xs">
               {HOTEL_INFO.tagline}. Discover a world of refined luxury and timeless heritage in Tamil Nadu.
             </p>
           </div>
@@ -122,7 +129,7 @@ export function Footer() {
           {/* Contact */}
           <div className="space-y-4">
             <h4 className="text-lg font-serif font-semibold tracking-wide text-primary uppercase">Contact</h4>
-            <ul className="space-y-3 text-muted-foreground">
+            <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-primary shrink-0" />
                 <span>{HOTEL_INFO.address}</span>
@@ -141,7 +148,7 @@ export function Footer() {
           {/* Links */}
           <div className="space-y-4">
             <h4 className="text-lg font-serif font-semibold tracking-wide text-primary uppercase">Explore</h4>
-            <ul className="space-y-2 text-muted-foreground">
+            <ul className="space-y-2">
               <li><Link href="/about"><a className="hover:text-white transition-colors">Our Story</a></Link></li>
               <li><Link href="/gallery"><a className="hover:text-white transition-colors">Photo Gallery</a></Link></li>
               <li><Link href="/booking"><a className="hover:text-white transition-colors">Check Availability</a></Link></li>
@@ -155,7 +162,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
           <p>&copy; {new Date().getFullYear()} {HOTEL_INFO.name}. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white">Privacy Policy</a>
@@ -168,11 +175,24 @@ export function Footer() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const [location] = useLocation();
+  
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <Navbar />
-      <main className="flex-grow">
-        {children}
+      <main className="flex-grow pt-20 md:pt-0">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location}
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.5, ease: "anticipate" }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
       <Footer />
     </div>
