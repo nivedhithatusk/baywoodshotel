@@ -42,7 +42,7 @@ export const VILLA = {
     "Hair Dryer",
     "Iron Box",
     "First Aid Kit",
-    "Private Parking",
+    "Complimentary Private Parking",
   ],
   highlights: [
     "Shared Beach Access",

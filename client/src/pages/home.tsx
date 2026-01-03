@@ -375,7 +375,7 @@ export default function Home() {
 
         {/* CTA */}
         <section className="py-32 relative bg-secondary overflow-hidden">
-          <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0">
             <img
               src={exteriorImg}
               className="w-full h-full object-cover grayscale"
