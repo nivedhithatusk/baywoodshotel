@@ -4,22 +4,7 @@ import { serveStatic } from "../server/static";
 
 const app = express();
 
-declare global {
-  namespace Express {
-    interface Request {
-      rawBody?: unknown;
-    }
-  }
-}
-
-app.use(
-  express.json({
-    verify: (req, _res, buf) => {
-      (req as any).rawBody = buf;
-    },
-  })
-);
-
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 async function init() {
@@ -31,6 +16,7 @@ async function init() {
     res.status(status).json({ message });
   });
 
+  // Serve only frontend HTML/JS/CSS
   serveStatic(app);
 }
 
