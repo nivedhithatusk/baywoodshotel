@@ -1,25 +1,17 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "../server/routes";
-import { serveStatic } from "../server/static";
+import express, { type Request, Response } from "express";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-async function init() {
-  await registerRoutes(app);
-
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    res.status(status).json({ message });
+// Minimal API stub: no server/routes or server/static in this repo.
+// Replace with real routes when you add a server or backend.
+app.use((_req: Request, res: Response) => {
+  res.status(501).json({
+    message: "API not configured",
+    hint: "Add server/routes and server/static, or implement handlers here.",
   });
-
-  // Serve only frontend HTML/JS/CSS
-  serveStatic(app);
-}
-
-init();
+});
 
 export default app;
